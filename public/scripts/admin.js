@@ -1,32 +1,20 @@
 // admin.js
 
-// Configuración de Firebase
-const firebaseConfig = {
-    apiKey: "AIzaSyCqMqsungqJZ16UvlPLWURQ4Lj7cjkEGks",
-    authDomain: "remateerynunez.firebaseapp.com",
-    projectId: "remateerynunez",
-    storageBucket: "remateerynunez.appspot.com",
-    messagingSenderId: "531727003623",
-    appId: "1:531727003623:web:cf09ca8d5bdf0267ae1742",
-    measurementId: "G-CM0X4KMZJW"
-};
+// Definir las credenciales del administrador
+const USERNAME = "admin";
+const PASSWORD = "admin123";
 
-// Inicializar Firebase
-firebase.initializeApp(firebaseConfig);
-
-// Función para verificar las credenciales del admin
-const USERNAME = "Alan Carabatti";
-const PASSWORD = "21334AlanC*";
-
+// Lógica para el inicio de sesión
 document.getElementById('login-btn').addEventListener('click', function() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
+    // Comprobar si las credenciales son correctas
     if (username === USERNAME && password === PASSWORD) {
-        // Si las credenciales son correctas, muestra el panel
+        // Si son correctas, muestra el panel de administración
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('admin-panel').style.display = 'block';
     } else {
-        alert("Usuario o contraseña incorrectos.");
+        alert("Credenciales incorrectas");
     }
 });
