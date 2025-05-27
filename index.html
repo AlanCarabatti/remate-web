@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remate Núñez</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Pantalla de inicio */
+        .welcome-container, .offers-container, .chat-container {
+            display: none;
+            text-align: center;
+            padding: 50px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            margin-top: 50px;
+        }
+
+        .offer {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .offer h3 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .offer p {
+            margin: 10px 0;
+        }
+
+        #chat-box {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            height: 300px;
+            overflow-y: auto;
+        }
+
+        .message {
+            margin: 5px 0;
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .message strong {
+            color: #007bff;
+        }
+
+        .chat-container input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Remate Núñez</h1>
+    </header>
+
+    <main>
+        <!-- Pantalla de inicio de sesión -->
+        <div class="welcome-container" id="welcome-container">
+            <h2>Bienvenido al Remate Núñez</h2>
+            <p>Por favor, ingresa tus datos para continuar:</p>
+            <input type="text" id="nombre" placeholder="Nombre completo" required>
+            <input type="email" id="email" placeholder="Correo electrónico" required>
+            <input type="text" id="telefono" placeholder="Número de teléfono (incluye el prefijo del país)" required>
+            <button type="button" id="btnStart">Ingresar</button>
+        </div>
+
+        <!-- Pantalla de ofertas -->
+        <div class="offers-container" id="offers-container">
+            <h2>Ofertas disponibles</h2>
+            <div class="offer">
+                <h3>Artículo 1: Guitarra Eléctrica</h3>
+                <p>Descripción: Guitarra eléctrica de alta gama, excelente para músicos profesionales.</p>
+                <p><strong>Valor base:</strong> $500 USD</p>
+                <p><strong>Última oferta:</strong> $550 USD</p>
+                <button>Hacer oferta</button>
+            </div>
+            <div class="offer">
+                <h3>Artículo 2: Cámara Profesional</h3>
+                <p>Descripción: Cámara profesional con lentes intercambiables.</p>
+                <p><strong>Valor base:</strong> $1,000 USD</p>
+                <p><strong>Última oferta:</strong> $1,200 USD</p>
+                <button>Hacer oferta</button>
+            </div>
+            <button onclick="mostrarChat()">Abrir Chat</button>
+        </div>
+
+        <!-- Pantalla de chat -->
+        <div class="chat-container" id="chat-container">
+            <h2>Chat en vivo con el Administrador</h2>
+            <div id="chat-box">
+                <!-- Los mensajes se mostrarán aquí -->
+            </div>
+            <input type="text" id="mensaje" placeholder="Escribe tu mensaje..." onkeydown="enviarMensaje(event)">
+            <button onclick="enviarMensaje()">Enviar</button>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Remate Núñez</p>
+    </footer>
+
+    <!-- Firebase scripts -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs, serverTimestamp } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "TU_API_KEY",
+            authDomain: "TU_AUTH_DOMAIN",
+            projectId: "TU_PROJECT_ID",
+            storageBucket: "TU_STORAGE_BUCKET",
+            messagingSenderId: "TU_MESSAGING_SENDER_ID",
+            appId: "TU_APP_ID",
+            measurementId: "TU_MEASUREMENT_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Función para almacenar los datos del usuario
+        document.getElementById('btnStart').addEventListener('click', () => {
+            const nombre = document.getElementById('nombre').value;
+            const email = document.getElementById('email').value;
+            const telefono = document.getElementById('telefono').value;
+
+            if (nombre && email && telefono) {
+                // Guardar en localStorage (simulación de la sesión)
+                localStorage.setItem('usuario', JSON.stringify({ nombre, email, telefono }));
+
+                // Mostrar una alerta de bienvenida
+                alert('¡Bienvenido, ' + nombre + '!');
+
+                // Ocultar la pantalla de inicio y mostrar las ofertas
+                document.getElementById('welcome-container').style.display = 'none';
+                document.getElementById('offers-container').style.display = 'block';
+            } else {
+                alert('Por favor, completa todos los campos.');
+            }
+        });
+
+        // Función para mostrar el chat
+        function mostrarChat() {
+            document.getElementById('offers-container').style.display = 'none';
+            document.getElementById('chat-container').style.display = 'block';
+            cargarMensajes();  // Cargar los mensajes del chat
+        }
+
+        // Enviar un mensaje al chat
+        function enviarMensaje(event) {
+            if (event && event.key !== 'Enter') return;
+            const mensaje = document.getElementById('mensaje').value;
+            if (mensaje.trim()) {
+                agregarMensajeAlChat('Usuario', mensaje);
+                document.getElementById('mensaje').value = '';  // Limpiar el campo de mensaje
+                guardarMensajeEnFirebase('Usuario', mensaje);
+            }
+        }
+
+        // Mostrar mensajes en el chat
+        function agregarMensajeAlChat(nombre, mensaje) {
+            const chatBox = document.getElementById('chat-box');
+            const mensajeElemento = document.createElement('div');
+            mensajeElemento.classList.add('message');
+            mensajeElemento.innerHTML = `<strong>${nombre}:</strong> ${mensaje}`;
+            chatBox.appendChild(mensajeElemento);
+            chatBox.scrollTop = chatBox.scrollHeight; // Desplazar hacia abajo al último mensaje
+        }
+
+        // Guardar mensaje en Firebase
+        function guardarMensajeEnFirebase(nombre, mensaje) {
+            const mensajeData = {
+                nombre: nombre,
+                mensaje: mensaje,
+                fecha: serverTimestamp()
+            };
+            addDoc(collection(db, 'chats'), mensajeData);
+        }
+
+        // Cargar mensajes desde Firestore
+        function cargarMensajes() {
+            getDocs(collection(db, 'chats')).then(snapshot => {
+                const chatBox = document.getElementById('chat-box');
+                snapshot.forEach(doc => {
+                    const mensaje = doc.data();
+                    agregarMensajeAlChat(mensaje.nombre, mensaje.mensaje);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
